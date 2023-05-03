@@ -1,0 +1,6 @@
+[core]
+	excludesFile = ~/.config/git/ignore
+[user]
+	name = Samuel Davis
+[push]
+	default = current
