@@ -32,7 +32,7 @@ local function install_plugins(plugins)
         if value == false then
             vim.fn["plug#"](key)
         else
-            vim.fn["plug#"](key, config)
+            vim.fn["plug#"](key, value)
         end
     end
     vim.call("plug#end")
@@ -75,4 +75,72 @@ vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 install_plugins({
     ["mbbill/undotree"] = false,
+    ["williamboman/mason.nvim"] = {
+        ["do"] = function () vim.call("MasonUpdate") end
+    },
+    ["williamboman/mason-lspconfig.nvim"] = false,
+    ["neovim/nvim-lspconfig"] = false,
+})
+
+local lsp_config = require("lspconfig")
+require("mason").setup()
+require("mason-lspconfig").setup({
+    ensure_installed = {
+        -- tooling
+        "lua_ls",
+        "bashls",
+        "marksman",
+        "yamlls",
+        -- web
+        "html",
+        "unocss",
+        "tsserver",
+        "jsonls",
+        -- backend
+        "intelephense",
+        "sqlls",
+        -- ops
+        "dockerls",
+        "docker_compose_language_service",
+        -- hobby
+        "denols",
+        "svelte",
+    },
+    handlers = {
+        function (server_name)
+            lsp_config[server_name].setup({})
+        end,
+        ["lua_ls"] = function ()
+            lsp_config.lua_ls.setup {
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = 'LuaJIT',
+                        },
+                        diagnostics = {
+                            globals = {
+                                'vim',
+                                'require'
+                            },
+                        },
+                        workspace = {
+                            -- Make the server aware of Neovim runtime files
+                            library = vim.api.nvim_get_runtime_file("", true),
+                        },
+                        -- Do not send telemetry data containing a randomized but unique identifier
+                        telemetry = {
+                            enable = false,
+                        },
+                    },
+                },
+            }
+        end,
+        ["intelephense"] = function ()
+            lsp_config.intelephense.setup({
+                init_options = {
+                    licenceKey = os.getenv("INTELEPHENSE_LICENCE_KEY"),
+                },
+            })
+        end,
+    },
 })
