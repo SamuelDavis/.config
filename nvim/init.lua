@@ -168,6 +168,7 @@ cmp.setup {
     },
     sources = {
         { name = 'nvim_lsp' },
+        { name = 'luasnip' },
     },
 }
 
@@ -221,9 +222,27 @@ vim.keymap.set("n", "<leader>ff", Telescope.find_files, {})
 vim.keymap.set("n", "<leader>fg", Telescope.live_grep, {})
 -- fuzzy-find file in git
 vim.keymap.set("n", "<leader>fp", Telescope.git_files, {})
--- fuzzy-find symbol
-vim.keymap.set("n", "<leader>fs", Telescope.lsp_dynamic_workspace_symbols, {})
--- find definitions
-vim.keymap.set("n", "<leader>fd", Telescope.lsp_definitions, {})
--- find references
-vim.keymap.set("n", "<leader>fr", Telescope.lsp_references, {})
+
+-- lsp
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+    callback = function(ev)
+        vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+        local opts = { buffer = ev.buf }
+        -- fuzzy-find symbol
+        vim.keymap.set("n", "<leader>fs", Telescope.lsp_dynamic_workspace_symbols, {})
+        -- find definitions
+        vim.keymap.set("n", "<leader>fd", Telescope.lsp_definitions, {})
+        -- find references
+        vim.keymap.set("n", "<leader>fr", Telescope.lsp_references, {})
+        vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, opts)
+        vim.keymap.set("n", "<leader>K", vim.lsp.buf.signature_help, opts)
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+        vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts)
+        vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts)
+        vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts)
+        vim.keymap.set("n", "<leader>wl", function()
+            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end, opts)
+    end,
+})
