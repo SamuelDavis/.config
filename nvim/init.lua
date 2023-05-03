@@ -74,13 +74,19 @@ vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 install_plugins({
+    -- undo diffs
     ["mbbill/undotree"] = false,
+    -- language server
     ["williamboman/mason.nvim"] = {
         ["do"] = function () vim.call("MasonUpdate") end
     },
     ["williamboman/mason-lspconfig.nvim"] = false,
     ["neovim/nvim-lspconfig"] = false,
+    -- formatter
     ["mhartington/formatter.nvim"] = false,
+        -- fuzzy-finder
+    ["nvim-lua/plenary.nvim"] = false,
+    ["nvim-telescope/telescope.nvim"] = { ["tag"] = "0.1.1" },
 })
 
 local lsp_config = require("lspconfig")
@@ -179,3 +185,27 @@ autocmd!
 autocmd BufWritePost * FormatWrite
 augroup END
 ]])
+
+vim.g.mapleader = ","
+-- paste+replace without losing yanked value
+vim.keymap.set({"n", "v"}, "<leader>p", "\"_dP")
+-- yank to system clipboard
+vim.keymap.set({"n", "v"}, "<leader>Y", "\"+y")
+-- paste from system clipboard
+vim.keymap.set("n", "<leader>P", "\"+p")
+vim.keymap.set("v", "<leader>P", "\"_d\"+p")
+-- view project filetree
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+local Telescope = require("telescope.builtin")
+-- fuzzy-find file
+vim.keymap.set("n", "<leader>ff", Telescope.find_files, {})
+-- fuzzy-find text (in buffers, {})
+vim.keymap.set("n", "<leader>fg", Telescope.live_grep, {})
+-- fuzzy-find file in git
+vim.keymap.set("n", "<leader>fp", Telescope.git_files, {})
+-- fuzzy-find symbol
+vim.keymap.set("n", "<leader>fs", Telescope.lsp_dynamic_workspace_symbols, {})
+-- find definitions
+vim.keymap.set("n", "<leader>fd", Telescope.lsp_definitions, {})
+-- find references
+vim.keymap.set("n", "<leader>fr", Telescope.lsp_references, {})
