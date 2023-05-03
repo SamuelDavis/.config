@@ -91,6 +91,7 @@ install_plugins({
     ["hrsh7th/nvim-cmp"] = false,
     ["hrsh7th/cmp-nvim-lsp"] = false,
     ["L3MON4D3/LuaSnip"] = false,
+    ["saadparwaiz1/cmp_luasnip"] = false,
 })
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -166,6 +167,9 @@ cmp.setup {
             end
         end, { 'i', 's' }),
     },
+    expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+    end,
     sources = {
         { name = 'nvim_lsp' },
         { name = 'luasnip' },
