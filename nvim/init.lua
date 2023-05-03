@@ -80,6 +80,7 @@ install_plugins({
     },
     ["williamboman/mason-lspconfig.nvim"] = false,
     ["neovim/nvim-lspconfig"] = false,
+    ["mhartington/formatter.nvim"] = false,
 })
 
 local lsp_config = require("lspconfig")
@@ -102,6 +103,7 @@ require("mason-lspconfig").setup({
         -- ops
         "dockerls",
         "docker_compose_language_service",
+        -- backend
         -- hobby
         "denols",
         "svelte",
@@ -144,3 +146,36 @@ require("mason-lspconfig").setup({
         end,
     },
 })
+
+local prettier = require("formatter.defaults.prettier")
+require("formatter").setup({
+    logging = true,
+    log_level = vim.log.levels.WARN,
+    filetype = {
+        -- tooling
+        ["sh"] = prettier,
+        -- web
+        ["html"] = prettier,
+        ["css"] = prettier,
+        ["javascript"] = prettier,
+        ["javascriptreact"] = prettier,
+        ["typescript"] = prettier,
+        ["typescriptreact"] = prettier,
+        ["json"] = prettier,
+        -- backend
+        ["php"] = prettier,
+        ["sql"] = prettier,
+        -- hobby
+        ["svelte"] = prettier,
+        ["*"] = {
+            require("formatter.filetypes.any").remove_trailing_whitespace
+        },
+    },
+})
+
+vim.cmd([[
+augroup FormatAutogroup
+autocmd!
+autocmd BufWritePost * FormatWrite
+augroup END
+]])
