@@ -84,11 +84,17 @@ install_plugins({
     ["neovim/nvim-lspconfig"] = false,
     -- formatter
     ["mhartington/formatter.nvim"] = false,
-        -- fuzzy-finder
+    -- fuzzy-finder
     ["nvim-lua/plenary.nvim"] = false,
     ["nvim-telescope/telescope.nvim"] = { ["tag"] = "0.1.1" },
+    -- Autocompletion
+    ["hrsh7th/nvim-cmp"] = false,
+    ["hrsh7th/cmp-nvim-lsp"] = false,
+    ["L3MON4D3/LuaSnip"] = false,
 })
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 local lsp_config = require("lspconfig")
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -116,42 +122,54 @@ require("mason-lspconfig").setup({
     },
     handlers = {
         function (server_name)
-            lsp_config[server_name].setup({})
-        end,
-        ["lua_ls"] = function ()
-            lsp_config.lua_ls.setup {
-                settings = {
-                    Lua = {
-                        runtime = {
-                            version = 'LuaJIT',
-                        },
-                        diagnostics = {
-                            globals = {
-                                'vim',
-                                'require'
-                            },
-                        },
-                        workspace = {
-                            -- Make the server aware of Neovim runtime files
-                            library = vim.api.nvim_get_runtime_file("", true),
-                        },
-                        -- Do not send telemetry data containing a randomized but unique identifier
-                        telemetry = {
-                            enable = false,
-                        },
-                    },
-                },
+            local options = {
+                ["capabilities"] = capabilities,
             }
-        end,
-        ["intelephense"] = function ()
-            lsp_config.intelephense.setup({
-                init_options = {
-                    licenceKey = os.getenv("INTELEPHENSE_LICENCE_KEY"),
-                },
-            })
+
+            if server_name == "intelephense" then
+                options.init_options = {
+                    ["licenceKey"] = os.getenv("INTELEPHENSE_LICENCE_KEY"),
+                }
+            end
+
+            lsp_config[server_name].setup(options)
         end,
     },
 })
+
+local cmp = require 'cmp'
+cmp.setup {
+    preselect = "item",
+    completion = { completeopt = "menu,menuone,noinsert" },
+    mapping = cmp.mapping.preset.insert {
+        ['<C-n>'] = cmp.mapping.select_next_item(),
+        ['<C-p>'] = cmp.mapping.select_prev_item(),
+        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+        ['<C-Space>'] = cmp.mapping.complete {},
+        ['<CR>'] = cmp.mapping.confirm {
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true,
+        },
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+        ['<S-Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
+    },
+    sources = {
+        { name = 'nvim_lsp' },
+    },
+}
 
 local prettier = require("formatter.defaults.prettier")
 require("formatter").setup({
