@@ -107,23 +107,26 @@ local function configure_lsp()
     })
 
     local lsp_config = require("lspconfig")
-    mason_lspconfig.setup_handlers {
+    mason_lspconfig.setup_handlers({
         function(server_name)
             lsp_config[server_name].setup({
                 capabilities = capabilities,
                 on_attach = on_attach,
                 settings = servers[server_name],
+                root_dir = function ()
+                    return vim.loop.cwd()
+                end
             })
         end,
-    }
+    })
 
     -- nvim-cmp setup
     local cmp = require("cmp")
     local luasnip = require("luasnip")
 
-    luasnip.config.setup {}
+    luasnip.config.setup({})
 
-    cmp.setup {
+    cmp.setup({
         snippet = {
             expand = function(args)
                 luasnip.lsp_expand(args.body)
@@ -162,7 +165,7 @@ local function configure_lsp()
             { name = "nvim_lsp" },
             { name = "luasnip" },
         },
-    }
+    })
 end
 
 return {

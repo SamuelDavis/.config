@@ -33,9 +33,11 @@ utility.apply_sets({
     nofoldenable = false,
 })
 
-utility.apply_theme("slate")
+utility.apply_theme("darcula")
 
 utility.install_plugins({
+    -- theme
+    ["doums/darcula"] = false,
     -- syntax tree
     ["nvim-treesitter/nvim-treesitter"] = {
         ["do"] = function() lua.cmd("TSUpdate") end,
