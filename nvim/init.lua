@@ -21,8 +21,15 @@ local PREFERRED_LANGUAGES = {
     -- hobby
     { treesitter = "svelte", prettier = "svelte" },
     { treesitter = "rust" },
+    { treesitter = "astro", prettier = "astro" },
 }
 local utility = require("utility")
+
+vim.filetype.add({
+    extension = {
+        astro = "astro",
+    },
+})
 
 utility.apply_options({
     -- general
