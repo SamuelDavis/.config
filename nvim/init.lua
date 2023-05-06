@@ -235,6 +235,8 @@ augroup END
 --
 require("which-key").setup()
 vim.g.mapleader = ","
+vim.keymap.set("n", "<leader>ex", function() vim.cmd("Ex") end, { desc = "[ex]plore filesystem" })
+
 local Telescope = require("telescope.builtin")
 vim.keymap.set("n", "<leader>fr", Telescope.oldfiles, { desc = "[f]ind [r]ecently opened files" })
 vim.keymap.set("n", "<leader>fb", Telescope.buffers, { desc = "[f]ind [b]uffers" })
