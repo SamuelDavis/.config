@@ -27,7 +27,6 @@ utility.apply_options({
 })
 
 utility.apply_sets({
-    autochdir = false,
     foldmethod = "expr",
     foldexpr = "nvim_treesitter#foldexpr()",
     nofoldenable = false,
