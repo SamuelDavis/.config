@@ -33,8 +33,6 @@ utility.apply_sets({
     nofoldenable = false,
 })
 
-utility.apply_theme("darcula")
-
 utility.install_plugins({
     -- theme
     ["doums/darcula"] = false,
@@ -61,6 +59,8 @@ utility.install_plugins({
     ["saadparwaiz1/cmp_luasnip"] = false,
     ["hrsh7th/nvim-cmp"] = false,
 })
+
+utility.apply_theme("darcula")
 
 configure.treesitter()
 configure.comment()
