@@ -102,11 +102,9 @@ utility.install_plugins(HOME_DIR, {
     },
     -- formatter
     ["mhartington/formatter.nvim"] = false,
-    -- theming
-    ["doums/darcula"] = false,
 })
 
-utility.apply_theme("darcula")
+utility.apply_theme("slate")
 require("Comment").setup()
 require("nvim-treesitter.configs").setup({
     ensure_installed = utility.pluck(PREFERRED_LANGUAGES, "treesitter"),
@@ -146,6 +144,42 @@ mason_lspconfig.setup({
     ensure_installed = utility.pluck(PREFERRED_LANGUAGES, "mason"),
 })
 
+local on_attach = function(_, bufnr)
+    local nmap = function(keys, func, desc)
+        if desc then
+            desc = "LSP: " .. desc
+        end
+
+        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+    end
+
+    local Telescope = require("telescope.builtin")
+    local Buffer = vim.lsp.buf
+    nmap("<leader>rn", Buffer.rename, "[r]e[n]ame")
+    nmap("<leader>ca", Buffer.code_action, "[c]ode [a]ction")
+
+    nmap("<leader>gd", Buffer.definition, "[g]oto [d]efinition")
+    nmap("<leader>gD", Buffer.declaration, "[g]oto [d]eclaration")
+    nmap("<leader>gr", Telescope.lsp_references, "[g]oto [r]eferences")
+    nmap("<leader>gi", Buffer.implementation, "[g]oto [i]mplementation")
+    nmap("<leader>td", Buffer.type_definition, "[t]ype [d]efinition")
+    nmap("<leader>sds", Telescope.lsp_document_symbols, "[s]earch [d]ocument [s]ymbols")
+    nmap("<leader>sws", Telescope.lsp_dynamic_workspace_symbols, "[s]earch [w]orkspace [s]ymbols")
+
+    nmap("K", Buffer.hover, "Hover Documentation")
+    nmap("<C-k>", Buffer.signature_help, "Signature Documentation")
+
+    nmap("<leader>wa", Buffer.add_workspace_folder, "[w]orkspace [a]dd folder")
+    nmap("<leader>wr", Buffer.remove_workspace_folder, "[w]orkspace [r]emove folder")
+    nmap("<leader>wl", function()
+        print(vim.inspect(Buffer.list_workspace_folders()))
+    end, "[w]orkspace [l]ist folders")
+
+    -- Create a command `:Format` local to the LSP buffer
+    vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
+        Buffer.format()
+    end, { desc = "Format current buffer with LSP" })
+end
 local lsp_config = require("lspconfig")
 mason_lspconfig.setup_handlers({
     function(server_name)
@@ -253,40 +287,3 @@ vim.keymap.set("n", "<leader>gdp", Diagnostics.goto_prev, { desc = "[g]oto [d]ia
 vim.keymap.set("n", "<leader>gdn", Diagnostics.goto_next, { desc = "[g]oto [d]iagnostic [n]ext" })
 vim.keymap.set("n", "<leader>dm", Diagnostics.open_float, { desc = "open [d]iagnostic [m]essage" })
 vim.keymap.set("n", "<leader>dl", Diagnostics.setloclist, { desc = "open [d]iagnostic [l]ist" })
-
-local on_attach = function(_, bufnr)
-    local nmap = function(keys, func, desc)
-        if desc then
-            desc = "LSP: " .. desc
-        end
-
-        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-    end
-
-    local Telescope = require("telescope.builtin")
-    local Buffer = vim.lsp.buf
-    nmap("<leader>rn", Buffer.rename, "[r]e[n]ame")
-    nmap("<leader>ca", Buffer.code_action, "[c]ode [a]ction")
-
-    nmap("<leader>gd", Buffer.definition, "[g]oto [d]efinition")
-    nmap("<leader>gD", Buffer.declaration, "[g]oto [d]eclaration")
-    nmap("<leader>gr", Telescope.lsp_references, "[g]oto [r]eferences")
-    nmap("<leader>gi", Buffer.implementation, "[g]oto [i]mplementation")
-    nmap("<leader>td", Buffer.type_definition, "[t]ype [d]efinition")
-    nmap("<leader>sds", Telescope.lsp_document_symbols, "[s]earch [d]ocument [s]ymbols")
-    nmap("<leader>sws", Telescope.lsp_dynamic_workspace_symbols, "[s]earch [w]orkspace [s]ymbols")
-
-    nmap("K", Buffer.hover, "Hover Documentation")
-    nmap("<C-k>", Buffer.signature_help, "Signature Documentation")
-
-    nmap("<leader>wa", Buffer.add_workspace_folder, "[w]orkspace [a]dd folder")
-    nmap("<leader>wr", Buffer.remove_workspace_folder, "[w]orkspace [r]emove folder")
-    nmap("<leader>wl", function()
-        print(vim.inspect(Buffer.list_workspace_folders()))
-    end, "[w]orkspace [l]ist folders")
-
-    -- Create a command `:Format` local to the LSP buffer
-    vim.api.nvim_buf_create_user_command(bufnr, "Format", function(_)
-        Buffer.format()
-    end, { desc = "Format current buffer with LSP" })
-end
