@@ -7,16 +7,7 @@ end
 
 local function apply_options(options)
 	for key, value in pairs(options) do
-		vim.o[key] = value
-	end
-end
-
-local function apply_sets(options)
-	for key, value in pairs(options) do
-		if value ~= false then
-			key = key .. "=" .. value
-		end
-		vim.cmd("set " .. key)
+		vim.opt[key] = value
 	end
 end
 
