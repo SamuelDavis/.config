@@ -34,11 +34,6 @@ end
 
 local function apply_theme(name)
 	vim.cmd("colorscheme " .. name)
-	-- prevent the illusion that the cursor has jumped to the matching paren
-	vim.cmd("hi MatchParen ctermfg=none ctermbg=none guifg=none guibg=none")
-	-- restore transparency after setting colorscheme
-	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 end
 
 local function pluck(table, key)
