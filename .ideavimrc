@@ -1,0 +1,12 @@
+let mapleader = ","
+
+# FIND
+map <leader>rn <Action>(RenameElement)
+map <leader>ff <Action>(GotoFile)
+map <leader>fs <Action>(GotoSymbol)
+map <leader>fu <Action>(FindUsages)
+map <C-n> <Action>(NextOccurence)
+map <C-p> <Action>(PreviousOccurence)
+
+# JUMP
+map <leader>gd <Action>(GotoDeclaration)
