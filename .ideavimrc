@@ -1,5 +1,7 @@
 let mapleader = ","
 
+map <leader>i <Action>(ShowIntentionActions)
+
 # FIND
 map <leader>rn <Action>(RenameElement)
 map <leader>ff <Action>(GotoFile)
@@ -10,3 +12,4 @@ map <C-p> <Action>(PreviousOccurence)
 
 # JUMP
 map <leader>gd <Action>(GotoDeclaration)
+
