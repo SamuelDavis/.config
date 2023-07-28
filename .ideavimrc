@@ -14,3 +14,7 @@ map <C-p> <Action>(PreviousOccurence)
 
 # JUMP
 map <leader>gd <Action>(GotoDeclaration)
+
+# Copy + Paste
+map <leader>sy <Action>(EditorCopy)
+map <leader>sp <Action>(EditorPaste)
