@@ -34,6 +34,13 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
 
+# compositor for transparency
+exec --no-startup-id compton
+# enable numlock
+exec --no-startup-id numlockx
+# configure extra monitor
+exec --no-startup-id xrandr --output DP-0 --left-of DP-4
+
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
@@ -154,14 +161,19 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-mode  "exit: [l]ogout, [r]eboot, [s]hutdown" {
-    bindsym l exec systemctl exit 0
-    bindsym r exec systemctl reboot
-    bindsym s exec systemctl shutdown
-    bindsym Escape mode "default"
+set $Locker i3lock && sleep 1
+set $mode_system System (l) logout, (r) reboot, (s) shutdown
+mode "$mode_system" {
+    bindsym l exec --no-startup-id i3-msg exit, mode "default"
+    bindsym r exec --no-startup-id systemctl reboot, mode "default"
+    bindsym s exec --no-startup-id systemctl poweroff -i, mode "default"  
+
+    # back to normal: Enter or Escape
     bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
-bindsym $mod+Shift+e mode "exit: [l]ogout, [r]eboot, [s]hutdown"
+
+bindsym $mod+Shift+e mode "$mode_system"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {

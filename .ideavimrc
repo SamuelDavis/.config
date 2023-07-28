@@ -1,3 +1,5 @@
+set ideajoin
+
 let mapleader = ","
 
 map <leader>i <Action>(ShowIntentionActions)
@@ -12,4 +14,3 @@ map <C-p> <Action>(PreviousOccurence)
 
 # JUMP
 map <leader>gd <Action>(GotoDeclaration)
-
