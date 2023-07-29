@@ -39,7 +39,7 @@ exec --no-startup-id compton
 # enable numlock
 exec --no-startup-id numlockx
 # configure extra monitor
-exec --no-startup-id xrandr --output DP-0 --left-of DP-4
+exec --no-startup-id xrandr --output DP-0 --left-of DP-4 && feh --no-fehbg --bg-fill --randomize ~/Wallpapers/
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -202,12 +202,30 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# class                 border  bground text    indicator child_border
+client.focused          #70865F #70865F #FFFFFF #70865F   #70865F
+client.focused_inactive #333333 #333333 #FFFFFF #333333   #333333
+client.unfocused        #333333 #333333 #BBBBBB #333333   #333333
+client.urgent           #333333 #900000 #FFFFFF #900000   #900000
+client.placeholder      #000000 #000000 #FFFFFF #000000   #000000
+
+client.background       #FFFFFF
+
 bar {
-        status_command i3status
+  status_command i3status
+  colors {
+    background #000000
+    statusline #FFFFFF
+    separator  #BBBBBB
+
+    focused_workspace  #70865F #70865F #FFFFFF
+    active_workspace   #333333 #333333 #FFFFFF
+    inactive_workspace #333333 #333333 #BBBBBB
+    urgent_workspace   #333333 #900000 #FFFFFF
+    binding_mode       #333333 #900000 #FFFFFF
+  }
 }
 
-client.background #000000
-
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id "dmenu_run -nf '#BBBBBB' -nb '#222222' -sb '#005577' -sf '#EEEEEE' -fn 'monospace-10' -p 'Search'"
+bindsym $mod+d exec "dmenu_run -nf '#BBBBBB' -nb '#000000' -sb '#70865F' -sf '#FFFFFF' -fn 'monospace-10' -p 'Search $'"
 
