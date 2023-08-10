@@ -5,3 +5,5 @@
 	email = samueljakdavis@gmail.com
 [push]
 	default = current
+[init]
+	defaultBranch = main
