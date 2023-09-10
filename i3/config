@@ -53,6 +53,8 @@ bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl --quiet set 5%-
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
+for_window [class="1Password"] floating enable
+
 # move tiling windows via drag & drop by left-clicking into the title bar,
 # or left-clicking anywhere into the window while holding the floating modifier.
 tiling_drag modifier titlebar
