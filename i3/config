@@ -39,7 +39,7 @@ exec --no-startup-id compton
 # enable numlock
 exec --no-startup-id numlockx
 # configure extra monitor
-exec --no-startup-id xrandr --output DP-0 --left-of DP-4 && feh --no-fehbg --bg-fill --randomize ~/Wallpapers/
+exec --no-startup-id autorandr horizontal-reverse && feh --no-fehbg --bg-fill --randomize ~/Wallpapers/
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -60,7 +60,7 @@ for_window [class="1Password"] floating enable
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec --no-startup-id xterm
+bindsym $mod+Return exec --no-startup-id xterm -font ttf-jetbrains-mono-nerd
 
 # kill focused window
 bindsym $mod+Shift+q kill

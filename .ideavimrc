@@ -1,19 +1,18 @@
-set ideajoin
-
 let mapleader = ","
 
-map <leader>i <Action>(ShowIntentionActions)
-
-# FIND
-map <leader>rn <Action>(RenameElement)
-map <leader>ff <Action>(GotoFile)
-map <leader>fs <Action>(GotoSymbol)
-map <leader>fu <Action>(FindUsages)
 map <C-n> <Action>(NextOccurence)
 map <C-p> <Action>(PreviousOccurence)
+map <leader>hs <Action>(ShowHoverInfo)
+map <leader>pp <Action>(ReformatWithPrettierAction)
 
-# JUMP
-map <leader>gd <Action>(GotoDeclaration)
+map <leader>ca <Action>(ShowIntentionActions)
+map <leader>cr <Action>(RenameElement)
+
+# FIND
+map <leader>ff <Action>(GotoFile)
+map <leader>fs <Action>(GotoSymbol)
+map <leader>fd <Action>(GotoDeclaration)
+map <leader>fr <Action>(FindUsages)
 
 # Copy + Paste
 map <leader>sy <Action>(EditorCopy)
